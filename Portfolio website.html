@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>At-Infinity · Frontend Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0D1117;
+      --bg2:       #161B22;
+      --bg3:       #21262D;
+      --blue:      #58A6FF;
+      --blue-deep: #1F6FEB;
+      --white:     #E6EDF3;
+      --muted:     #8B949E;
+      --border:    #30363D;
+      --green:     #3FB950;
+      --purple:    #BC8CFF;
+      --orange:    #F0883E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(13,17,23,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--blue);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--muted); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-family: 'JetBrains Mono', monospace;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--blue); }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 0; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 60px;
+    }
+    .hero-inner { width: 100%; }
+
+    .terminal {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 700px;
+      margin-bottom: 3rem;
+      box-shadow: 0 0 60px rgba(31,111,235,0.1);
+    }
+    .terminal-bar {
+      background: var(--bg3);
+      padding: 0.75rem 1rem;
+      display: flex; gap: 0.5rem; align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #FF5F57; }
+    .dot-y { background: #FEBC2E; }
+    .dot-g { background: #28C840; }
+    .terminal-title { color: var(--muted); font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: auto; }
+
+    .terminal-body {
+      padding: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      line-height: 1.8;
+    }
+    .t-prompt { color: var(--green); }
+    .t-cmd { color: var(--white); }
+    .t-key { color: var(--purple); }
+    .t-str { color: var(--orange); }
+    .t-comment { color: var(--muted); }
+    .t-bracket { color: var(--blue); }
+    .cursor {
+      display: inline-block;
+      width: 9px; height: 1.1em;
+      background: var(--blue);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .hero-headline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .hero-headline .hl { color: var(--blue); }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 1.125rem;
+      max-width: 500px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--blue-deep);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--blue); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(31,111,235,0.3); }
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { border-color: var(--blue); color: var(--blue); transform: translateY(-2px); }
+
+    /* ── SECTION HEADINGS ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--blue);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+    .divider {
+      width: 48px; height: 2px;
+      background: linear-gradient(90deg, var(--blue), transparent);
+      margin-bottom: 3rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    .about-text p strong { color: var(--white); }
+    .about-motto {
+      margin-top: 1.5rem;
+      padding: 1rem 1.25rem;
+      border-left: 3px solid var(--blue);
+      background: var(--bg2);
+      border-radius: 0 8px 8px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--white);
+      font-style: italic;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .stat-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover { border-color: var(--blue); }
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── STACK ── */
+    #stack { background: var(--bg2); }
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+    .tech-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .tech-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(88,166,255,0.1);
+    }
+    .tech-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .tech-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--white);
+    }
+    .tech-level { font-size: 0.7rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; gap: 1.5rem; }
+    .project-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .project-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(31,111,235,0.12);
+    }
+    .project-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+    .project-icon { font-size: 1.5rem; }
+    .project-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--blue);
+    }
+    .project-badge {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      background: rgba(31,111,235,0.15);
+      color: var(--blue);
+      border: 1px solid rgba(88,166,255,0.3);
+    }
+    .project-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem; }
+    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .tag {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      background: var(--bg3);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .project-links {
+      display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;
+    }
+    .icon-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 1.25rem;
+      transition: color 0.2s;
+    }
+    .icon-link:hover { color: var(--blue); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--bg2); }
+    .contact-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-inner .section-label,
+    .contact-inner .section-title,
+    .contact-inner .divider { margin-left: auto; margin-right: auto; }
+    .contact-inner .divider { background: linear-gradient(90deg, transparent, var(--blue), transparent); }
+    .contact-desc { color: var(--muted); margin-bottom: 2.5rem; }
+    .contact-links {
+      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+    footer span { color: var(--blue); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .project-card { grid-template-columns: 1fr; }
+      .project-links { flex-direction: row; align-items: center; }
+      nav .nav-links { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, .reveal { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#hero">at<span>-infinity</span><span style="color:var(--blue)">_</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#stack">stack</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="container hero-inner">
+      <div class="terminal reveal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="terminal-title">~/at-infinity — bash</span>
+        </div>
+        <div class="terminal-body">
+          <div><span class="t-prompt">➜ </span><span class="t-cmd">node profile.js</span></div>
+          <br>
+          <div><span class="t-key">const</span> <span style="color:var(--blue)">AtInfinity</span> = <span class="t-bracket">{</span></div>
+          <div>&nbsp;&nbsp;<span class="t-key">role</span>     : <span class="t-str">"Frontend Developer"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">focus</span>    : <span class="t-bracket">[</span><span class="t-str">"Web Apps"</span>, <span class="t-str">"AI Integrations"</span>, <span class="t-str">"Clean UI"</span><span class="t-bracket">]</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">building</span> : <span class="t-str">"smarter shopping with BuyWise"</span>,</div>
+          <div>&nbsp;&nbsp;<span class="t-key">motto</span>    : <span class="t-str">"If it doesn't solve a problem,</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="t-str"> it's just decoration."</span></div>
+          <div><span class="t-bracket">}</span></div>
+          <br>
+          <div><span class="t-comment">// Ready to build something great.</span> <span class="cursor"></span></div>
+        </div>
+      </div>
+
+      <h1 class="hero-headline reveal" style="transition-delay:0.1s">
+        I build <span class="hl">experiences</span>,<br>not just websites.
+      </h1>
+      <p class="hero-sub reveal" style="transition-delay:0.2s">
+        Frontend developer focused on AI-powered web apps, intuitive interfaces, and shipping things that actually matter.
+      </p>
+      <div class="hero-cta reveal" style="transition-delay:0.3s">
+        <a href="#projects" class="btn btn-primary">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8V1.5Z"/></svg>
+          View Projects
+        </a>
+        <a href="#contact" class="btn btn-ghost">
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/></svg>
+          Get In Touch
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label reveal">// about me</p>
+      <h2 class="section-title reveal">The developer behind the code</h2>
+      <div class="divider reveal"></div>
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>Hey! I'm <strong>At-Infinity</strong> — a frontend developer who believes the best UI is the one the user never has to think about.</p>
+          <p>I started with the fundamentals — <strong>HTML, CSS, and JavaScript</strong> — and quickly found my passion at the intersection of clean design and real functionality. Now I'm building <strong>AI-powered web experiences</strong> that go beyond static pages.</p>
+          <p>My biggest project, <strong>BuyWise</strong>, combines real-time data with smart comparison logic to help people shop smarter. That's the kind of problem-solving I live for.</p>
+          <div class="about-motto">"If it doesn't solve a problem, it's just decoration."</div>
+        </div>
+        <div class="stats-grid reveal" style="transition-delay:0.1s">
+          <div class="stat-card">
+            <div class="stat-num">5+</div>
+            <div class="stat-label">Projects shipped</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">46</div>
+            <div class="stat-label">Contributions last year</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">3+</div>
+            <div class="stat-label">Languages used</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Things left to build</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section id="stack">
+    <div class="container">
+      <p class="section-label reveal">// tech stack</p>
+      <h2 class="section-title reveal">What I build with</h2>
+      <div class="divider reveal"></div>
+      <div class="stack-grid">
+        <div class="tech-card reveal">
+          <div class="tech-icon">🌐</div>
+          <div class="tech-name">HTML5</div>
+          <div class="tech-level">Proficient</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.05s">
+          <div class="tech-icon">🎨</div>
+          <div class="tech-name">CSS3</div>
+          <div class="tech-level">Proficient</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.1s">
+          <div class="tech-icon">💜</div>
+          <div class="tech-name">SCSS</div>
+          <div class="tech-level">Proficient</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.15s">
+          <div class="tech-icon">⚡</div>
+          <div class="tech-name">JavaScript</div>
+          <div class="tech-level">Intermediate</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.2s">
+          <div class="tech-icon">🐙</div>
+          <div class="tech-name">Git</div>
+          <div class="tech-level">Intermediate</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.25s">
+          <div class="tech-icon">🔷</div>
+          <div class="tech-name">VS Code</div>
+          <div class="tech-level">Daily driver</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.3s">
+          <div class="tech-icon">⚛️</div>
+          <div class="tech-name">React</div>
+          <div class="tech-level">Learning</div>
+        </div>
+        <div class="tech-card reveal" style="transition-delay:0.35s">
+          <div class="tech-icon">🚀</div>
+          <div class="tech-name">Next.js</div>
+          <div class="tech-level">Exploring</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <p class="section-label reveal">// projects</p>
+      <h2 class="section-title reveal">Things I've shipped</h2>
+      <div class="divider reveal"></div>
+      <div class="projects-grid">
+
+        <div class="project-card reveal">
+          <div>
+            <div class="project-header">
+              <span class="project-icon">💡</span>
+              <span class="project-name">BuyWise</span>
+              <span class="project-badge">Featured</span>
+            </div>
+            <p class="project-desc">An AI-powered platform designed to streamline the online shopping experience. Helps users make informed purchasing decisions through real-time price comparison across stores.</p>
+            <div class="project-tags">
+              <span class="tag">SCSS</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">AI Integration</span>
+              <span class="tag">E-Commerce</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/At-Infinity/BuyWise-Smart-Price-Comparison-Website" target="_blank" class="icon-link" title="GitHub">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            </a>
+            <a href="#" class="icon-link" title="Live Demo">
+              <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="project-card reveal" style="transition-delay:0.1s">
+          <div>
+            <div class="project-header">
+              <span class="project-icon">🌐</span>
+              <span class="project-name">Aspera 5.0</span>
+              <span class="project-badge">Public</span>
+            </div>
+            <p class="project-desc">Official Aspera 5.0 website — a full frontend build showcasing modern web design principles, responsive layouts, and polished visual execution.</p>
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+              <span class="tag">Responsive Design</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/At-Infinity/asperabca" target="_blank" class="icon-link" title="GitHub">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="project-card reveal" style="transition-delay:0.2s">
+          <div>
+            <div class="project-header">
+              <span class="project-icon">🏠</span>
+              <span class="project-name">My HTML Site</span>
+              <span class="project-badge">Public</span>
+            </div>
+            <p class="project-desc">Personal website built from scratch with pure HTML and CSS — the foundation where it all started.</p>
+            <div class="project-tags">
+              <span class="tag">HTML</span>
+              <span class="tag">CSS</span>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="https://github.com/At-Infinity/my-html-site" target="_blank" class="icon-link" title="GitHub">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="contact-inner">
+        <p class="section-label reveal">// contact</p>
+        <h2 class="section-title reveal">Let's build something</h2>
+        <div class="divider reveal"></div>
+        <p class="contact-desc reveal">Open to freelance projects, collaborations, and new opportunities. If you have an idea or a role that needs a frontend developer — let's talk.</p>
+        <div class="contact-links reveal">
+          <a href="mailto:your@email.com" class="btn btn-primary">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Z"/></svg>
+            Send Email
+          </a>
+          <a href="https://github.com/At-Infinity" target="_blank" class="btn btn-ghost">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/abhijith-unnikrishnan-422079246/" target="_blank" class="btn btn-ghost">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by <span>At-Infinity</span> · Hosted on GitHub Pages · <span>2026</span></p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Trigger hero reveals immediately
+    document.querySelectorAll('#hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 120);
+    });
+  </script>
+</body>
+</html>
